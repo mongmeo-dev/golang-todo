@@ -6,6 +6,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"mongmeo.dev/todo/internal/adapter/database/ent"
+	TodoRouter "mongmeo.dev/todo/internal/adapter/router/todo"
+	TodoApplication "mongmeo.dev/todo/internal/application/todo"
 	"net/http"
 	"os"
 )
@@ -17,8 +19,12 @@ func main() {
 	}
 	defer client.Close()
 
+	todoApplication := TodoApplication.New(client.Todo)
+
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
+
+	r.Mount("/", TodoRouter.New(todoApplication).GetRouter())
 
 	err = http.ListenAndServe(":3000", r)
 	if err != nil {
