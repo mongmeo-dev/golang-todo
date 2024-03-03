@@ -2,6 +2,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"time"
 )
@@ -22,4 +24,10 @@ func (Todo) Fields() []ent.Field {
 
 func (Todo) Edges() []ent.Edge {
 	return nil
+}
+
+func (Todo) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entsql.Annotation{Table: "todos"},
+	}
 }
